@@ -1,11 +1,12 @@
-# ComfyUI Image Generator with Ollama
+# ComfyUI Image Generator with LLM Integration
 
-This project is a web application that integrates ComfyUI for image generation with Ollama for prompt improvement. It allows users to select models and LoRAs, input prompts, and generate images based on improved prompts.
+This project is a web application that integrates ComfyUI for image generation with various Language Model (LLM) options for prompt improvement. It allows users to configure their LLM choice, select models and LoRAs, input prompts, and generate images based on improved prompts.
 
 ## Features
 
+- Initial setup page for LLM configuration (Ollama, SambaNova, Groq, Cerebras)
 - Model and LoRA selection based on categories
-- Prompt improvement using locally running Ollama with Llama model
+- Prompt improvement using selected LLM
 - Image generation using ComfyUI
 - Display of original and improved prompts alongside generated images
 
@@ -13,28 +14,32 @@ This project is a web application that integrates ComfyUI for image generation w
 
 - Python 3.7+
 - Flask
-- Ollama running locally with Llama2 model
 - ComfyUI API accessible
+- Chosen LLM (e.g., Ollama running locally, or API access to other LLMs)
 
 ## Installation
 
 1. Clone the repository:
-git clone https://github.com/yourusername/ComfyUI_API_Testing.git cd ComfyUI_API_Testing
-
+   \`\`\`bash
+   git clone https://github.com/yourusername/ComfyUI_API_TestingV1.git
+   cd ComfyUI_API_TestingV1/comfyui_flask_project
+   \`\`\`
 
 2. Install the required packages:
-pip install -r requirements.txt
+   \`\`\`bash
+   pip install -r requirements.txt
+   \`\`\`
 
-
-3. Ensure Ollama is running locally with the Llama2 model.
+3. Ensure your chosen LLM is set up and accessible.
 
 4. Make sure ComfyUI is running and accessible.
 
 ## Configuration
 
 1. Update the `config.py` file with your ComfyUI API URL:
-python COMFYUI_API_URL = 'http://127.0.0.1:8188/api' # Adjust if needed
-
+   \`\`\`python
+   COMFYUI_API_URL = 'http://127.0.0.1:8188/api' # Adjust if needed
+   \`\`\`
 
 2. Prepare your model and LoRA lists:
    - Create `CKPmodels.txt` and `Lmodels.txt` files
@@ -43,18 +48,20 @@ python COMFYUI_API_URL = 'http://127.0.0.1:8188/api' # Adjust if needed
 ## Running the Application
 
 1. Start the Flask application:
-python run.py
-
+   \`\`\`bash
+   python run.py
+   \`\`\`
 
 2. Open a web browser and navigate to `http://127.0.0.1:5000`
 
 ## Usage
 
-1. Select a category from the dropdown
-2. Choose a model and optionally a LoRA
-3. Enter your prompt in the text area
-4. Click "Generate Image"
-5. View the original prompt, improved prompt, and generated image
+1. On first run, complete the setup page to configure your LLM choice
+2. On the main page, select a category from the dropdown
+3. Choose a model and optionally a LoRA
+4. Enter your prompt in the text area
+5. Click "Generate Image"
+6. View the original prompt, improved prompt, and generated image
 
 ## Contributing
 
