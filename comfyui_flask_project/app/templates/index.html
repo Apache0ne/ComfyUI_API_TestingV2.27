@@ -13,86 +13,107 @@
             <textarea id="promptInput" placeholder="Enter your prompt here..." required></textarea>
             <select id="categorySelect" required>
                 <option value="">Select a category</option>
-                {% for category in models %}
-                <option value="{{ category }}">{{ category }}</option>
+                {% for category in categories %}
+                    <option value="{{ category }}">{{ category }}</option>
                 {% endfor %}
             </select>
-            <select id="modelSelect" required>
+            <select id="modelSelect" required disabled>
                 <option value="">Select a model</option>
+            </select>
+            <select id="loraSelect" disabled>
+                <option value="none">None</option>
             </select>
             <button type="submit">Generate Image</button>
         </form>
         <div id="loading" style="display: none;">Generating image...</div>
-        <div id="promptDisplay" style="display: none;">
-            <p><strong>Your prompt:</strong> <span id="userPrompt"></span></p>
-            <p><strong>Refined prompt:</strong> <span id="refinedPrompt"></span></p>
-        </div>
         <div id="imageContainer"></div>
     </div>
 
     <script>
-    const modelsData = JSON.parse('{{ models | tojson | safe }}');
+        document.getElementById('categorySelect').addEventListener('change', function() {
+            const category = this.value;
+            const modelSelect = document.getElementById('modelSelect');
+            const loraSelect = document.getElementById('loraSelect');
+            
+            if (category) {
+                fetch('/get_models_and_loras', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        'category': category
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    modelSelect.innerHTML = '<option value="">Select a model</option>';
+                    data.models.forEach(model => {
+                        const option = document.createElement('option');
+                        option.value = model;
+                        option.textContent = model;
+                        modelSelect.appendChild(option);
+                    });
+                    modelSelect.disabled = false;
 
-    document.getElementById('categorySelect').addEventListener('change', function() {
-        const category = this.value;
-        const modelSelect = document.getElementById('modelSelect');
-        modelSelect.innerHTML = '<option value="">Select a model</option>';
-        
-        if (category && modelsData[category]) {
-            modelsData[category].forEach(model => {
-                const option = document.createElement('option');
-                option.value = model;
-                option.textContent = model;
-                modelSelect.appendChild(option);
-            });
-        }
-    });
-
-    document.getElementById('promptForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const prompt = document.getElementById('promptInput').value;
-        const category = document.getElementById('categorySelect').value;
-        const model = document.getElementById('modelSelect').value;
-        const loading = document.getElementById('loading');
-        const imageContainer = document.getElementById('imageContainer');
-        const promptDisplay = document.getElementById('promptDisplay');
-        
-        loading.style.display = 'block';
-        imageContainer.innerHTML = '';
-        promptDisplay.style.display = 'none';
-        
-        fetch('/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({
-                'prompt': prompt,
-                'category': category,
-                'model': model
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            loading.style.display = 'none';
-            if (data.image) {
-                const img = document.createElement('img');
-                img.src = 'data:image/png;base64,' + data.image;
-                imageContainer.appendChild(img);
-                
-                document.getElementById('userPrompt').textContent = data.user_prompt;
-                document.getElementById('refinedPrompt').textContent = data.refined_prompt;
-                promptDisplay.style.display = 'block';
+                    loraSelect.innerHTML = '<option value="none">None</option>';
+                    data.loras.forEach(lora => {
+                        const option = document.createElement('option');
+                        option.value = lora;
+                        option.textContent = lora;
+                        loraSelect.appendChild(option);
+                    });
+                    loraSelect.disabled = false;
+                });
             } else {
-                imageContainer.textContent = 'Error generating image';
+                modelSelect.innerHTML = '<option value="">Select a model</option>';
+                modelSelect.disabled = true;
+                loraSelect.innerHTML = '<option value="none">None</option>';
+                loraSelect.disabled = true;
             }
-        })
-        .catch(error => {
-            loading.style.display = 'none';
-            imageContainer.textContent = 'Error: ' + error;
         });
-    });
+
+        document.getElementById('promptForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const prompt = document.getElementById('promptInput').value;
+            const category = document.getElementById('categorySelect').value;
+            const model = document.getElementById('modelSelect').value;
+            const lora = document.getElementById('loraSelect').value;
+            const loading = document.getElementById('loading');
+            const imageContainer = document.getElementById('imageContainer');
+            
+            loading.style.display = 'block';
+            imageContainer.innerHTML = '';
+            
+            fetch('/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    'prompt': prompt,
+                    'category': category,
+                    'model': model,
+                    'lora': lora
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                loading.style.display = 'none';
+                if (data.image) {
+                    const img = document.createElement('img');
+                    img.src = 'data:image/png;base64,' + data.image;
+                    imageContainer.appendChild(img);
+                } else {
+                    imageContainer.textContent = 'Error generating image';
+                }
+            })
+            .catch(error => {
+                loading.style.display = 'none';
+                imageContainer.textContent = 'Error: ' + error;
+            });
+        });
     </script>
 </body>
 </html>
