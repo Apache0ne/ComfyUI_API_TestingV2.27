@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ComfyUI Image Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>ComfyUI Image Generator</h1>
+        <form id="promptForm">
+            <textarea id="promptInput" placeholder="Enter your prompt here..." required></textarea>
+            <button type="submit">Generate Image</button>
+        </form>
+        <div id="loading" style="display: none;">Generating image...</div>
+        <div id="imageContainer"></div>
+    </div>
+
+    <script>
+        document.getElementById('promptForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const prompt = document.getElementById('promptInput').value;
+            const loading = document.getElementById('loading');
+            const imageContainer = document.getElementById('imageContainer');
+            
+            loading.style.display = 'block';
+            imageContainer.innerHTML = '';
+            
+            fetch('/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    'prompt': prompt
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                loading.style.display = 'none';
+                if (data.image) {
+                    const img = document.createElement('img');
+                    img.src = 'data:image/png;base64,' + data.image;
+                    imageContainer.appendChild(img);
+                } else {
+                    imageContainer.textContent = 'Error generating image';
+                }
+            })
+            .catch(error => {
+                loading.style.display = 'none';
+                imageContainer.textContent = 'Error: ' + error;
+            });
+        });
+    </script>
+</body>
+</html>
