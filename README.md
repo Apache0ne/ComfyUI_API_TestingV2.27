@@ -57,14 +57,14 @@ To add or remove checkpoint models:
 2. Add or remove model filenames under the appropriate category ([SDXL], [SD], or [FLUX])
 3. Save the file and restart the Flask app
 
-Example `CKPmodels.txt`:
+Example `CKPmodels.txt`:\
 [SDXL]\
 creapromptLightning_creapromtHypersdxlV1.safetensors\
-sdxl_model2.safetensors\
+sdxl_model2.safetensors
 
 [SD]\
 epicrealism_naturalSinRC1VAE.safetensors\
-sd_model2.safetensors\
+sd_model2.safetensors
 
 [FLUX]\
 flux1-dev-bnb-nf4-v2.safetensors\
