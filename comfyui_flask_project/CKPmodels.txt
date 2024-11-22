@@ -1,0 +1,2 @@
+creapromptLightning_creapromtHypersdxlV1.safetensors
+epicrealism_naturalSinRC1VAE.safetensors
