@@ -9,6 +9,9 @@
 <body>
     <div class="container">
         <h1>ComfyUI Image Generator</h1>
+        <form action="{{ url_for('main.reset_setup') }}" method="post">
+            <button type="submit">Return to Setup</button>
+        </form>
         <form id="promptForm">
             <select id="categorySelect" required>
                 <option value="">Select a category</option>

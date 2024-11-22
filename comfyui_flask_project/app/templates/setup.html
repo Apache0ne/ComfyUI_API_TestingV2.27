@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Setup</title>
+</head>
+<body>
+    <h1>Setup</h1>
+    <form id="setupForm" action="{{ url_for('main.setup') }}" method="post">
+        <label for="llmChoice">Choose LLM:</label>
+        <select id="llmChoice" name="llmChoice">
+            <option value="ollama">Ollama</option>
+            <option value="sambanova">SambaNova</option>
+            <option value="groq">Groq</option>
+            <option value="cerebras">Cerebras</option>
+        </select>
+
+        <div id="ollamaSettings" style="display:none;">
+            <label for="ollamaModel">Ollama Model:</label>
+            <input type="text" id="ollamaModel" name="ollamaModel">
+        </div>
+
+        <div id="apiSettings" style="display:none;">
+            <label for="apiKey">API Key:</label>
+            <input type="text" id="apiKey" name="apiKey">
+            <label for="modelName">Model Name:</label>
+            <input type="text" id="modelName" name="modelName">
+        </div>
+
+        <button type="submit">Save and Continue</button>
+    </form>
+
+    <script>
+        document.getElementById('llmChoice').addEventListener('change', function() {
+            const ollamaSettings = document.getElementById('ollamaSettings');
+            const apiSettings = document.getElementById('apiSettings');
+            if (this.value === 'ollama') {
+                ollamaSettings.style.display = 'block';
+                apiSettings.style.display = 'none';
+            } else {
+                ollamaSettings.style.display = 'none';
+                apiSettings.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

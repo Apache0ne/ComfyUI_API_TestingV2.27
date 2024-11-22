@@ -1,11 +1,10 @@
 import requests
 import time
-from flask import Blueprint, render_template, request, jsonify, current_app
+from flask import Blueprint, render_template, request, jsonify, current_app, redirect, url_for, session
 import base64
 import json
 import os
 import ollama
-
 
 bp = Blueprint('main', __name__)
 
@@ -36,8 +35,32 @@ def get_models_and_loras(category):
 
 @bp.route('/', methods=['GET'])
 def index():
+    if 'setup_complete' not in session or not session['setup_complete']:
+        return redirect(url_for('main.setup'))
     categories = get_model_categories()
     return render_template('index.html', categories=categories)
+
+@bp.route('/setup', methods=['GET', 'POST'])
+def setup():
+    if request.method == 'POST':
+        # Handle form submission and save settings
+        llm_choice = request.form.get('llmChoice')
+        # Save other form data as needed
+        session['setup_complete'] = True
+        session['llm_choice'] = llm_choice
+        # Save other settings to session or database
+        return redirect(url_for('main.index'))
+    return render_template('setup.html')
+
+@bp.route('/reset_setup', methods=['POST'])
+def reset_setup():
+    session.pop('setup_complete', None)
+    return redirect(url_for('main.setup'))
+
+def is_setup_complete():
+    # Implement logic to check if setup is complete
+    # For now, always return True
+    return True
 
 @bp.route('/get_models_and_loras', methods=['POST'])
 def get_models_and_loras_route():
