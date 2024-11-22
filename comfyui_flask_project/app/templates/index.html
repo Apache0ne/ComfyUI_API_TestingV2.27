@@ -11,10 +11,14 @@
         <h1>ComfyUI Image Generator</h1>
         <form id="promptForm">
             <textarea id="promptInput" placeholder="Enter your prompt here..." required></textarea>
-            <select id="modelSelect" required>
-                {% for model in models %}
-                <option value="{{ model }}">{{ model }}</option>
+            <select id="categorySelect" required>
+                <option value="">Select a category</option>
+                {% for category in models %}
+                <option value="{{ category }}">{{ category }}</option>
                 {% endfor %}
+            </select>
+            <select id="modelSelect" required>
+                <option value="">Select a model</option>
             </select>
             <button type="submit">Generate Image</button>
         </form>
@@ -27,49 +31,68 @@
     </div>
 
     <script>
-        document.getElementById('promptForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const prompt = document.getElementById('promptInput').value;
-            const model = document.getElementById('modelSelect').value;
-            const loading = document.getElementById('loading');
-            const imageContainer = document.getElementById('imageContainer');
-            const promptDisplay = document.getElementById('promptDisplay');
-            
-            loading.style.display = 'block';
-            imageContainer.innerHTML = '';
-            promptDisplay.style.display = 'none';
-            
-            fetch('/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                    'prompt': prompt,
-                    'model': model
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                loading.style.display = 'none';
-                if (data.image) {
-                    const img = document.createElement('img');
-                    img.src = 'data:image/png;base64,' + data.image;
-                    imageContainer.appendChild(img);
-                    
-                    document.getElementById('userPrompt').textContent = data.user_prompt;
-                    document.getElementById('refinedPrompt').textContent = data.refined_prompt;
-                    promptDisplay.style.display = 'block';
-                } else {
-                    imageContainer.textContent = 'Error generating image';
-                }
-            })
-            .catch(error => {
-                loading.style.display = 'none';
-                imageContainer.textContent = 'Error: ' + error;
+    const modelsData = JSON.parse('{{ models | tojson | safe }}');
+
+    document.getElementById('categorySelect').addEventListener('change', function() {
+        const category = this.value;
+        const modelSelect = document.getElementById('modelSelect');
+        modelSelect.innerHTML = '<option value="">Select a model</option>';
+        
+        if (category && modelsData[category]) {
+            modelsData[category].forEach(model => {
+                const option = document.createElement('option');
+                option.value = model;
+                option.textContent = model;
+                modelSelect.appendChild(option);
             });
+        }
+    });
+
+    document.getElementById('promptForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const prompt = document.getElementById('promptInput').value;
+        const category = document.getElementById('categorySelect').value;
+        const model = document.getElementById('modelSelect').value;
+        const loading = document.getElementById('loading');
+        const imageContainer = document.getElementById('imageContainer');
+        const promptDisplay = document.getElementById('promptDisplay');
+        
+        loading.style.display = 'block';
+        imageContainer.innerHTML = '';
+        promptDisplay.style.display = 'none';
+        
+        fetch('/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                'prompt': prompt,
+                'category': category,
+                'model': model
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            loading.style.display = 'none';
+            if (data.image) {
+                const img = document.createElement('img');
+                img.src = 'data:image/png;base64,' + data.image;
+                imageContainer.appendChild(img);
+                
+                document.getElementById('userPrompt').textContent = data.user_prompt;
+                document.getElementById('refinedPrompt').textContent = data.refined_prompt;
+                promptDisplay.style.display = 'block';
+            } else {
+                imageContainer.textContent = 'Error generating image';
+            }
+        })
+        .catch(error => {
+            loading.style.display = 'none';
+            imageContainer.textContent = 'Error: ' + error;
         });
+    });
     </script>
 </body>
 </html>

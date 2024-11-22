@@ -11,6 +11,7 @@ def index():
     if request.method == 'POST':
         user_prompt = request.form.get('prompt')
         selected_model = request.form.get('model')
+        selected_category = request.form.get('category')
         
         ollama_response = ollama.generate(model="llama3.2", prompt=f"Refine this image prompt for better results: {user_prompt}")
         refined_prompt = ollama_response['response'].strip()
