@@ -1,91 +1,65 @@
-# ComfyUI API Testing
+# ComfyUI Image Generator with Ollama
 
-A Flask-based web application that interfaces with ComfyUI's API to generate images based on user prompts. This project demonstrates the integration of ComfyUI's image generation capabilities into a web application.
+This project is a web application that integrates ComfyUI for image generation with Ollama for prompt improvement. It allows users to select models and LoRAs, input prompts, and generate images based on improved prompts.
 
 ## Features
 
-- Web interface for submitting text prompts
-- Integration with ComfyUI API for image generation
-- Real-time image display upon generation
-- Customizable ComfyUI workflow
-- Error handling and user feedback
+- Model and LoRA selection based on categories
+- Prompt improvement using locally running Ollama with Llama model
+- Image generation using ComfyUI
+- Display of original and improved prompts alongside generated images
 
 ## Prerequisites
 
 - Python 3.7+
-- ComfyUI instance running and accessible
+- Flask
+- Ollama running locally with Llama2 model
+- ComfyUI API accessible
 
-## Setup
+## Installation
 
 1. Clone the repository:
-   \`\`\`bash
-   git clone https://github.com/Apache0ne/ComfyUI_API_Testing.git
-   cd ComfyUI_API_Testing
-   \`\`\`
+git clone https://github.com/yourusername/ComfyUI_API_Testing.git cd ComfyUI_API_Testing
 
-2. Install dependencies:
-   \`\`\`bash
-   pip install -r comfyui_flask_project/requirements.txt
-   \`\`\`
 
-3. Configure ComfyUI API URL in `comfyui_flask_project/config.py`
+2. Install the required packages:
+pip install -r requirements.txt
 
-4. Run the application:
-   \`\`\`bash
-   python comfyui_flask_project/run.py
-   \`\`\`
 
-5. Access the web interface at `http://localhost:5000`
+3. Ensure Ollama is running locally with the Llama2 model.
 
-## Usage
-
-1. Enter a text prompt in the web interface
-2. Click "Generate Image"
-3. Wait for the image to be generated and displayed
-
-## Project Structure
-
-- `comfyui_flask_project/`: Main project directory
-  - `app/`: Flask application
-    - `static/`: Static files (CSS, JS)
-    - `templates/`: HTML templates
-    - `routes.py`: Flask routes and ComfyUI API interaction
-  - `config.py`: Configuration settings
-  - `run.py`: Application entry point
-- `requirements.txt`: Python dependencies
-
-## ComfyUI Workflow
-
-The project uses a predefined ComfyUI workflow, which includes:
-- KSampler
-- CheckpointLoaderSimple
-- EmptyLatentImage
-- CLIPTextEncode
-- VAEDecode
-- SaveImage
-- LoraLoader
-
-The workflow can be customized in `app/routes.py`.
+4. Make sure ComfyUI is running and accessible.
 
 ## Configuration
 
-Update `comfyui_flask_project/config.py` to set:
-- `SECRET_KEY`: Flask secret key
-- `COMFYUI_API_URL`: URL of your ComfyUI API endpoint
-- `UPLOAD_FOLDER`: Directory for uploaded files
-- `MAX_CONTENT_LENGTH`: Maximum upload file size
+1. Update the `config.py` file with your ComfyUI API URL:
+python COMFYUI_API_URL = 'http://127.0.0.1:8188/api' # Adjust if needed
+
+
+2. Prepare your model and LoRA lists:
+   - Create `CKPmodels.txt` and `Lmodels.txt` files
+   - Format them with categories in square brackets and models/LoRAs listed under each category
+
+## Running the Application
+
+1. Start the Flask application:
+python run.py
+
+
+2. Open a web browser and navigate to `http://127.0.0.1:5000`
+
+## Usage
+
+1. Select a category from the dropdown
+2. Choose a model and optionally a LoRA
+3. Enter your prompt in the text area
+4. Click "Generate Image"
+5. View the original prompt, improved prompt, and generated image
 
 ## Contributing
 
-This project is a work in progress. Contributions, suggestions, and feedback are welcome. Please feel free to submit a Pull Request or open an issue.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-[Specify your license here]
-
-## Acknowledgements
-
-- ComfyUI project
-- Flask framework
-
-Note: Ensure ComfyUI is running and accessible at the configured API URL before using this application.
+This project is licensed under the MIT License - see the LICENSE file for details.

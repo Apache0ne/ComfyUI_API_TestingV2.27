@@ -4,6 +4,8 @@ from flask import Blueprint, render_template, request, jsonify, current_app
 import base64
 import json
 import os
+import ollama
+
 
 bp = Blueprint('main', __name__)
 
@@ -44,10 +46,14 @@ def get_models_and_loras_route():
 
 @bp.route('/generate', methods=['POST'])
 def generate():
-    prompt = request.form.get('prompt')
+    original_prompt = request.form.get('prompt')
     category = request.form.get('category')
     selected_model = request.form.get('model')
     selected_lora = request.form.get('lora')
+
+    # Improve prompt using locally running Ollama with Llama model
+    improved_prompt = ollama.generate(model='llama3.2', prompt=f"Improve this image generation prompt: {original_prompt}")
+    improved_prompt = improved_prompt['response'].strip()
 
     workflow = {
         "3": {
@@ -81,7 +87,7 @@ def generate():
         },
         "6": {
             "inputs": {
-                "text": prompt,
+                "text": improved_prompt,
                 "clip": ["4", 1]
             },
             "class_type": "CLIPTextEncode",
@@ -139,7 +145,7 @@ def generate():
                     if output_images:
                         image_data = output_images['13']['images'][0]
                         image_b64 = base64.b64encode(requests.get(f"{api_url}/view?filename={image_data['filename']}").content).decode('utf-8')
-                        return jsonify({'image': image_b64})
+                        return jsonify({'image': image_b64, 'original_prompt': original_prompt, 'improved_prompt': improved_prompt})
             
             time.sleep(0.5)
     
