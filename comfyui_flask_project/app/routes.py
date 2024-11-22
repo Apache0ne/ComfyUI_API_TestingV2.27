@@ -10,6 +10,7 @@ bp = Blueprint('main', __name__)
 def index():
     if request.method == 'POST':
         user_prompt = request.form.get('prompt')
+        selected_model = request.form.get('model')
         
         ollama_response = ollama.generate(model="llama3.2", prompt=f"Refine this image prompt for better results: {user_prompt}")
         refined_prompt = ollama_response['response'].strip()
@@ -32,7 +33,7 @@ def index():
             },
             "4": {
                 "inputs": {
-                    "ckpt_name": "creapromptLightning_creapromtHypersdxlV1.safetensors"
+                    "ckpt_name": selected_model
                 },
                 "class_type": "CheckpointLoaderSimple",
             },
@@ -107,5 +108,5 @@ def index():
                 time.sleep(0.5)
         
         return jsonify({'error': 'Failed to generate image'}), 500
-
-    return render_template('index.html')
+    models = current_app.config['CHECKPOINT_MODELS']
+    return render_template('index.html', models=models)

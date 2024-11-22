@@ -1,13 +1,14 @@
 # ComfyUI API Testing with Ollama Integration
 
-A Flask-based web interface for generating images using ComfyUI's API, enhanced with Ollama-powered prompt refinement.
+A Flask-based web interface for generating images using ComfyUI's API, enhanced with Ollama-powered prompt refinement and customizable checkpoint models.
 
 ## Features
-- Web UI for prompt input
+- Web UI for prompt input and model selection
 - Ollama integration for prompt refinement
 - Display of original and refined prompts
 - ComfyUI API integration for image generation
 - Asynchronous image processing and display
+- Customizable list of checkpoint models
 
 ## Requirements
 - Python 3.7+
@@ -32,6 +33,8 @@ A Flask-based web interface for generating images using ComfyUI's API, enhanced 
 
 4. Install and run Ollama with the required model (e.g., llama2)
 
+5. Create and populate `CKPmodels.txt` with your checkpoint model filenames, one per line
+
 ## Usage
 1. Run the Flask app:
    \`\`\`bash
@@ -40,10 +43,19 @@ A Flask-based web interface for generating images using ComfyUI's API, enhanced 
 
 2. Access the web interface at `http://localhost:5000`
 
-3. Enter a prompt, submit, and view the original prompt, refined prompt, and generated image
+3. Select a checkpoint model from the dropdown
+4. Enter a prompt and submit
+5. View the original prompt, refined prompt, and generated image
 
 ## Configuration
-Adjust ComfyUI API URL, Ollama settings, and other configurations in `config.py`
+- Adjust ComfyUI API URL and other settings in `config.py`
+- Manage available checkpoint models by editing `CKPmodels.txt`
+
+## Customizing Checkpoint Models
+To add or remove checkpoint models:
+1. Open `CKPmodels.txt`
+2. Add or remove model filenames, one per line
+3. Save the file and restart the Flask app
 
 ## Note
 This project is under active development. Contributions and feedback are welcome.
