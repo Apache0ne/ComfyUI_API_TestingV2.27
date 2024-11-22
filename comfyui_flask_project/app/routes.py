@@ -1,17 +1,19 @@
 import requests
 import time
+import ollama
 from flask import Blueprint, render_template, request, jsonify, current_app
 import base64
-import json
 
 bp = Blueprint('main', __name__)
 
 @bp.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        prompt = request.form.get('prompt')
+        user_prompt = request.form.get('prompt')
         
-        # ComfyUI API workflow
+        ollama_response = ollama.generate(model="llama3.2", prompt=f"Refine this image prompt for better results: {user_prompt}")
+        refined_prompt = ollama_response['response'].strip()
+        
         workflow = {
             "3": {
                 "inputs": {
@@ -44,7 +46,7 @@ def index():
             },
             "6": {
                 "inputs": {
-                    "text": prompt,  # Use the user-provided prompt
+                    "text": refined_prompt,
                     "clip": ["17", 1]
                 },
                 "class_type": "CLIPTextEncode",
@@ -88,7 +90,6 @@ def index():
         if response.status_code == 200:
             prompt_id = response.json()['prompt_id']
             
-            # Wait for the image to be generated
             while True:
                 history_response = requests.get(f"{api_url}/history/{prompt_id}")
                 if history_response.status_code == 200:
@@ -96,11 +97,10 @@ def index():
                     if prompt_id in history:
                         output_images = history[prompt_id]['outputs']
                         if output_images:
-                            image_data = output_images['13']['images'][0]  # Changed from '9' to '13'
+                            image_data = output_images['13']['images'][0]
                             image_b64 = base64.b64encode(requests.get(f"{api_url}/view?filename={image_data['filename']}").content).decode('utf-8')
                             return jsonify({'image': image_b64})
                 
-                # Add a small delay before checking again
                 time.sleep(0.5)
         
         return jsonify({'error': 'Failed to generate image'}), 500
