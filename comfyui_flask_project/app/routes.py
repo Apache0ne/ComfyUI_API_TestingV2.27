@@ -99,8 +99,11 @@ def index():
                         if output_images:
                             image_data = output_images['13']['images'][0]
                             image_b64 = base64.b64encode(requests.get(f"{api_url}/view?filename={image_data['filename']}").content).decode('utf-8')
-                            return jsonify({'image': image_b64})
-                
+                            return jsonify({
+                                    'image': image_b64,
+                                    'user_prompt': user_prompt,
+                                    'refined_prompt': refined_prompt
+                                })
                 time.sleep(0.5)
         
         return jsonify({'error': 'Failed to generate image'}), 500
