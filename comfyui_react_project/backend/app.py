@@ -137,6 +137,7 @@ def generate():
 @app.route('/api/setup', methods=['POST'])
 def save_setup():
     data = request.json
+    print('Received setup data:', data) # Add this line
     app.config['LLM_CONFIG'] = {
         'choice': data['llmChoice'],
         'model': data.get('ollamaModel') or data.get('modelName'),

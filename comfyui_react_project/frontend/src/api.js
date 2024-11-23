@@ -39,7 +39,8 @@ export const saveLLMSetup = async (setupData) => {
     body: JSON.stringify(setupData),
   });
   if (!response.ok) {
-    throw new Error('Failed to save LLM setup');
+    const errorText = await response.text(); // Add this line
+    throw new Error(`Failed to save LLM setup: ${errorText}`); // Modify this line
   }
   return response.json();
 };

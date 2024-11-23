@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ModelSelector from './ModelSelector';
 import PromptInput from './PromptInput';
 import { generateImage } from '../api';
 
 function ImageGenerator() {
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedModel, setSelectedModel] = useState('');
   const [selectedLora, setSelectedLora] = useState('');
@@ -45,6 +47,7 @@ function ImageGenerator() {
 
   return (
     <div className="image-generator">
+      <button onClick={() => navigate(-1)}>Back</button>
       <h2>Generate Image</h2>
       <ModelSelector onModelSelect={handleModelSelect} />
       <PromptInput onSubmit={handlePromptSubmit} />

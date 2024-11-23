@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { saveLLMSetup } from '../api';
+import { useNavigate } from 'react-router-dom';
 
 function Setup({ onSetupComplete }) {
+  const navigate = useNavigate(); // Declare navigate here
   const [llmChoice, setLLMChoice] = useState('');
   const [ollamaModel, setOllamaModel] = useState('');
   const [apiKey, setApiKey] = useState('');
@@ -21,9 +23,14 @@ function Setup({ onSetupComplete }) {
         ...(llmChoice !== 'ollama' && { apiKey, modelName }),
       };
 
+      console.log('Setup data:', setupData); // Add this line
       await saveLLMSetup(setupData);
-      onSetupComplete();
+      console.log('Setup saved successfully'); // Add this line
+      console.log('Navigating to ImageGenerator');
+      onSetupComplete(); // Ensure this is called to update the state
+      navigate('/image-generator');
     } catch (error) {
+      console.error('Failed to save setup:', error); // Add this line
       setError('Failed to save setup. Please try again.');
     } finally {
       setIsLoading(false);
