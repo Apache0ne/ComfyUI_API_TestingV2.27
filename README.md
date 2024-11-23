@@ -13,46 +13,44 @@ This project is a web application that integrates ComfyUI for image generation w
 ## Prerequisites
 
 - Python 3.7+
-- Flask
+- Node.js 14+
+- npm 6+
 - ComfyUI API accessible
 - Chosen LLM (e.g., Ollama running locally, or API access to other LLMs)
 
 ## Installation
 
 1. Clone the repository:
-   \`\`\`bash
-   git clone https://github.com/yourusername/ComfyUI_API_TestingV1.git
-   cd ComfyUI_API_TestingV1/comfyui_flask_project
-   \`\`\`
+git clone https://github.com/yourusername/comfyui-react-project.git cd comfyui-react-project
 
-2. Install the required packages:
-   \`\`\`bash
-   pip install -r requirements.txt
-   \`\`\`
 
-3. Ensure your chosen LLM is set up and accessible.
+2. Set up the backend:
+cd backend pip install -r requirements.txt
 
-4. Make sure ComfyUI is running and accessible.
 
-## Configuration
+3. Set up the frontend:
+cd ../frontend npm install
 
-1. Update the `config.py` file with your ComfyUI API URL:
-   \`\`\`python
-   COMFYUI_API_URL = 'http://127.0.0.1:8188/api' # Adjust if needed
-   \`\`\`
 
-2. Prepare your model and LoRA lists:
-   - Create `CKPmodels.txt` and `Lmodels.txt` files
+4. Configure the ComfyUI API URL in `backend/config.py`:
+python COMFYUI_API_URL = 'http://127.0.0.1:8188/api' # Adjust if needed
+
+
+5. Prepare your model and LoRA lists:
+   - Edit `backend/CKPmodels.txt` and `backend/Lmodels.txt`
    - Format them with categories in square brackets and models/LoRAs listed under each category
 
 ## Running the Application
 
-1. Start the Flask application:
-   \`\`\`bash
-   python run.py
-   \`\`\`
+1. Start the backend:
+cd backend python app.py
 
-2. Open a web browser and navigate to `http://127.0.0.1:5000`
+
+2. In a new terminal, start the frontend:
+cd frontend npm start
+
+
+3. Open a web browser and navigate to `http://localhost:3000`
 
 ## Usage
 
@@ -62,6 +60,19 @@ This project is a web application that integrates ComfyUI for image generation w
 4. Enter your prompt in the text area
 5. Click "Generate Image"
 6. View the original prompt, improved prompt, and generated image
+
+## Project Structure
+
+- `backend/`: Flask backend
+  - `app.py`: Main Flask application
+  - `config.py`: Configuration settings
+  - `requirements.txt`: Python dependencies
+- `frontend/`: React frontend
+  - `src/`: Source files
+    - `components/`: React components
+    - `App.js`: Main React component
+    - `api.js`: API interaction functions
+  - `package.json`: Node.js dependencies and scripts
 
 ## Contributing
 
