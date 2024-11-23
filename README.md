@@ -1,83 +1,64 @@
-# ComfyUI Image Generator with LLM Integration
+# ComfyUI API Testing V3 React
 
-This project is a web application that integrates ComfyUI for image generation with various Language Model (LLM) options for prompt improvement. It allows users to configure their LLM choice, select models and LoRAs, input prompts, and generate images based on improved prompts.
+A React-based frontend for ComfyUI image generation with LLM integration.
 
 ## Features
 
-- Initial setup page for LLM configuration (Ollama, SambaNova, Groq, Cerebras)
-- Model and LoRA selection based on categories
-- Prompt improvement using selected LLM
 - Image generation using ComfyUI
-- Display of original and improved prompts alongside generated images
+- LLM integration for prompt improvement
+- Model and LoRA selection
+- Support for multiple LLM providers (Ollama, SambaNova, Groq, Cerebras)
 
-## Prerequisites
+## Structure
 
-- Python 3.7+
-- Node.js 14+
-- npm 6+
-- ComfyUI API accessible
-- Chosen LLM (e.g., Ollama running locally, or API access to other LLMs)
+- `frontend/`: React application
+- `backend/`: Flask API server
 
-## Installation
+## Setup
 
 1. Clone the repository:
-git clone https://github.com/yourusername/comfyui-react-project.git cd comfyui-react-project
-
+   \`\`\`bash
+   git clone https://github.com/Apache0ne/ComfyUI_API_TestingV3_react.git
+   cd ComfyUI_API_TestingV3_react
+   \`\`\`
 
 2. Set up the backend:
-cd backend pip install -r requirements.txt
-
+   \`\`\`bash
+   cd comfyui_react_project/backend
+   pip install -r requirements.txt
+   \`\`\`
 
 3. Set up the frontend:
-cd ../frontend npm install
+   \`\`\`bash
+   cd ../frontend
+   npm install
+   \`\`\`
 
-
-4. Configure the ComfyUI API URL in `backend/config.py`:
-python COMFYUI_API_URL = 'http://127.0.0.1:8188/api' # Adjust if needed
-
-
-5. Prepare your model and LoRA lists:
-   - Edit `backend/CKPmodels.txt` and `backend/Lmodels.txt`
-   - Format them with categories in square brackets and models/LoRAs listed under each category
-
-## Running the Application
+## Running
 
 1. Start the backend:
-cd backend python app.py
+   \`\`\`bash
+   cd comfyui_react_project/backend
+   python app.py
+   \`\`\`
 
+2. Start the frontend:
+   \`\`\`bash
+   cd comfyui_react_project/frontend
+   npm start
+   \`\`\`
 
-2. In a new terminal, start the frontend:
-cd frontend npm start
+3. Access the application at `http://localhost:3000`
 
+## Configuration
 
-3. Open a web browser and navigate to `http://localhost:3000`
-
-## Usage
-
-1. On first run, complete the setup page to configure your LLM choice
-2. On the main page, select a category from the dropdown
-3. Choose a model and optionally a LoRA
-4. Enter your prompt in the text area
-5. Click "Generate Image"
-6. View the original prompt, improved prompt, and generated image
-
-## Project Structure
-
-- `backend/`: Flask backend
-  - `app.py`: Main Flask application
-  - `config.py`: Configuration settings
-  - `requirements.txt`: Python dependencies
-- `frontend/`: React frontend
-  - `src/`: Source files
-    - `components/`: React components
-    - `App.js`: Main React component
-    - `api.js`: API interaction functions
-  - `package.json`: Node.js dependencies and scripts
+- Backend: Edit `config.py` for API URLs and model paths
+- Frontend: Update API endpoint in `src/api.js` if needed
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Please read CONTRIBUTING.md for details on code of conduct and the process for submitting pull requests.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the LICENSE.md file for details.
