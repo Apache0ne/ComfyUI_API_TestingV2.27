@@ -4,8 +4,8 @@ export default function sketch(p) {
 
   p.preload = () => {
     theShader = p.loadShader(
-      '/src/shaders/vertex.glsl',
-      '/src/shaders/fragment.glsl'
+      '/vertex.glsl',
+      '/fragment.glsl'
     );
   };
 
