@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ModelSelector from './ModelSelector';
 import PromptInput from './PromptInput';
+import ShaderCanvas from './ShaderCanvas';
 import { generateImage } from '../api';
 
 function ImageGenerator() {
@@ -14,6 +15,7 @@ function ImageGenerator() {
   const [improvedPrompt, setImprovedPrompt] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [useShaderCanvas, setUseShaderCanvas] = useState(false);
 
   const handleModelSelect = ({ category, model, lora }) => {
     setSelectedCategory(category);
@@ -57,11 +59,19 @@ function ImageGenerator() {
 
       {generatedImage && (
         <div className="generated-image">
-          <img src={generatedImage} alt="Generated" />
-          <p><strong>Original Prompt:</strong> {originalPrompt}</p>
-          <p><strong>Improved Prompt:</strong> {improvedPrompt}</p>
+          {useShaderCanvas ? (
+            <ShaderCanvas imageUrl={generatedImage} />
+          ) : (
+            <img src={generatedImage} alt="Generated" />
+          )}
+          {originalPrompt && <p><strong>Original Prompt:</strong> {originalPrompt}</p>}
+          {improvedPrompt && <p><strong>Improved Prompt:</strong> {improvedPrompt}</p>}
         </div>
       )}
+
+      <button onClick={() => setUseShaderCanvas(!useShaderCanvas)}>
+        {useShaderCanvas ? 'Show Regular Image' : 'Show Shader Canvas'}
+      </button>
     </div>
   );
 }

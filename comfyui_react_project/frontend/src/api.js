@@ -24,10 +24,22 @@ export const generateImage = async (promptData) => {
     },
     body: JSON.stringify(promptData),
   });
+
   if (!response.ok) {
     throw new Error('Failed to generate image');
   }
-  return response.json();
+
+  // Clone the response before reading the body
+  const clonedResponse = response.clone();
+
+  const blob = await clonedResponse.blob();
+  const imageUrl = URL.createObjectURL(blob);
+
+  return {
+    image_url: imageUrl,
+    original_prompt: response.headers.get('X-Original-Prompt'),
+    improved_prompt: response.headers.get('X-Improved-Prompt')
+  };
 };
 
 export const saveLLMSetup = async (setupData) => {
@@ -39,8 +51,8 @@ export const saveLLMSetup = async (setupData) => {
     body: JSON.stringify(setupData),
   });
   if (!response.ok) {
-    const errorText = await response.text(); // Add this line
-    throw new Error(`Failed to save LLM setup: ${errorText}`); // Modify this line
+    const errorText = await response.text();
+    throw new Error(`Failed to save LLM setup: ${errorText}`);
   }
   return response.json();
 };
