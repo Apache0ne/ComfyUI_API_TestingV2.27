@@ -1,4 +1,4 @@
-# ComfyUI API Testing V2.28.2
+# ComfyUI API Testing V2.28.2(FMD IS DEPRECATED)
 
 A React-based frontend and Flask-based backend for ComfyUI Image Generator with LLM integration.
 
