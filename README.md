@@ -1,4 +1,4 @@
-# ComfyUI Image Generator with LLM Integration
+# ComfyUI Image Generator with LLM Integration(NEW BUILD)(FMD IS DEPRECATED FOR NOW)
 
 A React-based frontend for ComfyUI with LLM-enhanced prompt generation and shader effects.
 
