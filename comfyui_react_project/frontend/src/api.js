@@ -16,13 +16,21 @@ export const getModelsAndLoras = async (category) => {
   return response.json();
 };
 
-export const generateImage = async (promptData) => {
+export const getWorkflows = async () => {
+  const response = await fetch(`${API_BASE_URL}/workflows`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch workflows');
+  }
+  return response.json();
+};
+
+export const generateImage = async (promptData, workflow) => {
   const response = await fetch(`${API_BASE_URL}/generate`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(promptData),
+    body: JSON.stringify({ ...promptData, workflow }),
   });
 
   if (!response.ok) {

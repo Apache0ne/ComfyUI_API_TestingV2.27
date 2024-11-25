@@ -5,6 +5,7 @@ import ollama
 import os
 import html
 from config import Config
+from workflow_utils import edit_workflow, list_workflows
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -22,6 +23,13 @@ def get_models_and_loras():
         'loras': app.config['LORA_MODELS'].get(category, [])
     })
 
+@app.route('/api/workflows', methods=['GET'])
+def get_workflows():
+    print("Endpoint /api/workflows called")
+    workflows = list_workflows()
+    print(f"Workflows found: {workflows}")
+    return jsonify(workflows)
+
 @app.route('/api/generate', methods=['POST'])
 def generate():
     data = request.json
@@ -29,6 +37,7 @@ def generate():
     category = data['category']
     selected_model = data['model']
     selected_lora = data.get('lora', '')
+    workflow_name = data.get('workflow', 'default')
 
     llm_config = app.config['LLM_CONFIG']
     if llm_config['choice'] == 'ollama':
@@ -38,80 +47,88 @@ def generate():
         # Implement other LLM API calls here (SambaNova, Groq, Cerebras)
         improved_prompt = original_prompt  # Fallback if not implemented
 
-    workflow = {
-        "3": {
-            "inputs": {
-                "seed": 1113884446105075,
-                "steps": 4,
-                "cfg": 1,
-                "sampler_name": "dpmpp_sde",
-                "scheduler": "normal",
-                "denoise": 1,
-                "model": ["4", 0],
-                "positive": ["6", 0],
-                "negative": ["7", 0],
-                "latent_image": ["5", 0]
-            },
-            "class_type": "KSampler",
-        },
-        "4": {
-            "inputs": {
-                "ckpt_name": selected_model
-            },
-            "class_type": "CheckpointLoaderSimple",
-        },
-        "5": {
-            "inputs": {
-                "width": 1024,
-                "height": 1024,
-                "batch_size": 1
-            },
-            "class_type": "EmptyLatentImage",
-        },
-        "6": {
-            "inputs": {
-                "text": improved_prompt,
-                "clip": ["4", 1]
-            },
-            "class_type": "CLIPTextEncode",
-        },
-        "7": {
-            "inputs": {
-                "text": "text, watermark",
-                "clip": ["4", 1]
-            },
-            "class_type": "CLIPTextEncode",
-        },
-        "8": {
-            "inputs": {
-                "samples": ["3", 0],
-                "vae": ["4", 2]
-            },
-            "class_type": "VAEDecode",
-        },
-        "13": {
-            "inputs": {
-                "filename_prefix": "ComfyUI_API_Testing",
-                "images": ["8", 0]
-            },
-            "class_type": "SaveImage",
-        }
-    }
+    # Update data with improved prompt
+    data['prompt'] = improved_prompt
 
-    if selected_lora and selected_lora.lower() != 'none':
-        workflow["17"] = {
-            "inputs": {
-                "lora_name": selected_lora,
-                "strength_model": 1,
-                "strength_clip": 1,
-                "model": ["4", 0],
-                "clip": ["4", 1]
+    try:
+        # Use the edit_workflow function to get a preprocessed workflow
+        workflow = edit_workflow(workflow_name, data)
+    except FileNotFoundError:
+        # Fallback to the original workflow structure if the file is not found
+        workflow = {
+            "3": {
+                "inputs": {
+                    "seed": data.get('seed', 1113884446105075),
+                    "steps": data.get('steps', 4),
+                    "cfg": data.get('cfg', 1),
+                    "sampler_name": data.get('sampler_name', "dpmpp_sde"),
+                    "scheduler": data.get('scheduler', "normal"),
+                    "denoise": data.get('denoise', 1),
+                    "model": ["4", 0],
+                    "positive": ["6", 0],
+                    "negative": ["7", 0],
+                    "latent_image": ["5", 0]
+                },
+                "class_type": "KSampler",
             },
-            "class_type": "LoraLoader",
+            "4": {
+                "inputs": {
+                    "ckpt_name": selected_model
+                },
+                "class_type": "CheckpointLoaderSimple",
+            },
+            "5": {
+                "inputs": {
+                    "width": data.get('width', 1024),
+                    "height": data.get('height', 1024),
+                    "batch_size": data.get('batch_size', 1)
+                },
+                "class_type": "EmptyLatentImage",
+            },
+            "6": {
+                "inputs": {
+                    "text": improved_prompt,
+                    "clip": ["4", 1]
+                },
+                "class_type": "CLIPTextEncode",
+            },
+            "7": {
+                "inputs": {
+                    "text": "text, watermark",
+                    "clip": ["4", 1]
+                },
+                "class_type": "CLIPTextEncode",
+            },
+            "8": {
+                "inputs": {
+                    "samples": ["3", 0],
+                    "vae": ["4", 2]
+                },
+                "class_type": "VAEDecode",
+            },
+            "13": {
+                "inputs": {
+                    "filename_prefix": "ComfyUI_API_Testing",
+                    "images": ["8", 0]
+                },
+                "class_type": "SaveImage",
+            }
         }
-        workflow["3"]["inputs"]["model"] = ["17", 0]
-        workflow["6"]["inputs"]["clip"] = ["17", 1]
-        workflow["7"]["inputs"]["clip"] = ["17", 1]
+
+        if selected_lora and selected_lora.lower() != 'none':
+            workflow["17"] = {
+                "inputs": {
+                    "lora_name": selected_lora,
+                    "strength_model": data.get('lora_strength_model', 1),
+                    "strength_clip": data.get('lora_strength_clip', 1),
+                    "model": ["4", 0],
+                    "clip": ["4", 1]
+                },
+                "class_type": "LoraLoader",
+            }
+            workflow["3"]["inputs"]["model"] = ["17", 0]
+            workflow["6"]["inputs"]["clip"] = ["17", 1]
+            workflow["7"]["inputs"]["clip"] = ["17", 1]
 
     try:
         response = requests.post(f"{app.config['COMFYUI_API_URL']}/prompt", json={"prompt": workflow})
