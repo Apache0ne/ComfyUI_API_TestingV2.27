@@ -30,7 +30,7 @@ class Config:
 
         return models
 
-    CHECKPOINT_MODELS = load_checkpoint_models.__func__()
+    CHECKPOINT_MODELS = load_checkpoint_models()
 
     @staticmethod
     def load_lora_models():
@@ -49,4 +49,4 @@ class Config:
 
         return models
 
-    LORA_MODELS = load_lora_models.__func__()
+    LORA_MODELS = load_lora_models()

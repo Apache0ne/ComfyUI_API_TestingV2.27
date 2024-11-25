@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { getCategories, getModelsAndLoras } from '../api';
+import { getCategories, getModelsAndLoras } from '../api/api';
 
 function ModelSelector({ onModelSelect }) {
   const [categories, setCategories] = useState([]);
