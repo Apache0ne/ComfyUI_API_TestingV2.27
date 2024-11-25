@@ -1,6 +1,9 @@
 export default function sketch(p) {
   let theShader;
   let img;
+  let rotX = 0;
+  let rotY = 0;
+  let translateZ = 0;
 
   p.preload = () => {
     theShader = p.loadShader(
@@ -15,17 +18,43 @@ export default function sketch(p) {
   };
 
   p.draw = () => {
+    p.background(0);
+    
     if (img) {
       p.shader(theShader);
-      theShader.setUniform('u_resolution', [p.width, p.height]);
-      theShader.setUniform('u_time', p.millis() / 1000.0);
-      theShader.setUniform('u_texture', img);
-      p.rect(0, 0, p.width, p.height);
+      
+      p.push();
+      p.rotateX(rotX);
+      p.rotateY(rotY);
+      p.translate(0, 0, translateZ);
+      
+      theShader.setUniform('uProjectionMatrix', p._renderer.uPMatrix.mat4);
+      theShader.setUniform('uModelViewMatrix', p._renderer.uMVMatrix.mat4);
+      theShader.setUniform('uTexture', img);
+      
+      p.plane(img.width, img.height);
+      p.pop();
     }
   };
 
   p.updateImage = (newImage) => {
     img = newImage;
     p.resizeCanvas(img.width, img.height);
+    rotX = 0;
+    rotY = 0;
+    translateZ = 0;
+  };
+
+  p.mouseDragged = () => {
+    if (p.mouseButton === p.LEFT) {
+      rotY += (p.mouseX - p.pmouseX) * 0.01;
+      rotX += (p.mouseY - p.pmouseY) * 0.01;
+    } else if (p.mouseButton === p.RIGHT) {
+      translateZ += (p.mouseY - p.pmouseY);
+    }
+  };
+
+  p.mouseWheel = (event) => {
+    translateZ += event.delta;
   };
 }

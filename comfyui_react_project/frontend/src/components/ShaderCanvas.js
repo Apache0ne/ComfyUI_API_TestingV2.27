@@ -17,7 +17,7 @@ const ShaderCanvas = ({ imageUrl }) => {
         p5Instance.remove();
       }
     };
-  }, [p5Instance]);  // Add p5Instance to the dependency array
+  }, [p5Instance]);
 
   useEffect(() => {
     if (p5Instance && imageUrl) {
@@ -25,12 +25,18 @@ const ShaderCanvas = ({ imageUrl }) => {
         p5Instance.updateImage(loadedImg);
       });
     }
-  }, [p5Instance, imageUrl]);  // This dependency array is correct
+  }, [p5Instance, imageUrl]);
+
+  useEffect(() => {
+    if (canvasRef.current) {
+      canvasRef.current.oncontextmenu = (e) => e.preventDefault();
+    }
+  }, []);
 
   return (
     <div>
       <div ref={canvasRef}></div>
-      {!imageUrl && <p>Please generate an image to apply shader effects.</p>}
+      {!imageUrl && <p>Please generate an image to apply 3D shader effects.</p>}
     </div>
   );
 };
