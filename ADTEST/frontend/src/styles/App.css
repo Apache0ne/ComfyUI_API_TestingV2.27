@@ -1,0 +1,75 @@
+.App {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .App-header {
+    background-color: #282c34;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+    margin-bottom: 20px;
+  }
+  
+  .App-link {
+    color: #61dafb;
+  }
+  
+  button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  input, select, textarea {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .error {
+    color: #ff0000;
+    margin-top: 10px;
+  }
+  
+  .loading {
+    color: #0000ff;
+    margin-top: 10px;
+  }
+  
+  .generated-image {
+    margin-top: 20px;
+  }
+  
+  .generated-image img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .prompt-display {
+    margin-top: 20px;
+    text-align: left;
+  }
