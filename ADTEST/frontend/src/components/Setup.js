@@ -8,6 +8,7 @@ function Setup({ onSetupComplete }) {
   const [ollamaModel, setOllamaModel] = useState('');
   const [apiKey, setApiKey] = useState('');
   const [modelName, setModelName] = useState('');
+  const [apiUrl, setApiUrl] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -20,7 +21,7 @@ function Setup({ onSetupComplete }) {
       const setupData = {
         llmChoice,
         ...(llmChoice === 'ollama' && { ollamaModel }),
-        ...(llmChoice !== 'ollama' && { apiKey, modelName }),
+        ...(llmChoice !== 'ollama' && { apiKey, modelName, apiUrl }),
       };
 
       console.log('Setup data:', setupData);
@@ -89,6 +90,16 @@ function Setup({ onSetupComplete }) {
                 id="modelName"
                 value={modelName}
                 onChange={(e) => setModelName(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="apiUrl">API URL:</label>
+              <input
+                type="text"
+                id="apiUrl"
+                value={apiUrl}
+                onChange={(e) => setApiUrl(e.target.value)}
                 required
               />
             </div>

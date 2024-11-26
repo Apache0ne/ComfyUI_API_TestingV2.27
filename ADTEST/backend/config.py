@@ -2,7 +2,7 @@ import os
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'your-secret-key'
-    COMFYUI_API_URL = 'http://127.0.0.1:8188/api'
+    COMFYUI_API_URL = 'http://127.0.0.1:8189/api'
     UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024
 
