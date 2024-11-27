@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { saveLLMSetup } from '../api/api';
 import { useNavigate } from 'react-router-dom';
+import '../styles/Setup.css';
 
 function Setup({ onSetupComplete }) {
   const navigate = useNavigate();

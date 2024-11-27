@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import '../styles/PromptInput.css';
 
 function PromptInput({ onSubmit }) {
   const [prompt, setPrompt] = useState('');
@@ -7,6 +8,7 @@ function PromptInput({ onSubmit }) {
     e.preventDefault();
     if (prompt.trim()) {
       onSubmit(prompt);
+      setPrompt(''); // Clear the input after submission
     }
   };
 

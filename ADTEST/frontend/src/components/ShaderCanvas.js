@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import p5 from 'p5';
 import sketch from '../p5setup/sketch';
+import '../styles/ShaderCanvas.css';
 
 const ShaderCanvas = ({ imageUrl }) => {
   const canvasRef = useRef(null);
@@ -34,8 +35,8 @@ const ShaderCanvas = ({ imageUrl }) => {
   }, []);
 
   return (
-    <div>
-      <div ref={canvasRef}></div>
+    <div className="shader-canvas-container">
+      <div ref={canvasRef} className="shader-canvas"></div>
       {!imageUrl && <p>Please generate an image to apply 3D shader effects.</p>}
     </div>
   );
