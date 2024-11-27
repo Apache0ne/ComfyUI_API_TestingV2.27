@@ -1,0 +1,25 @@
+/* src/styles/App.css */
+
+.App {
+  text-align: center;
+  font-family: Arial, sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.App-header {
+  background-color: #4B0082;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: #e0e0e0;
+  margin-bottom: 20px;
+}
+
+.App-link {
+  color: #61dafb;
+}

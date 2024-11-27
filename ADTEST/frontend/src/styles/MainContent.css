@@ -1,0 +1,33 @@
+.main-content {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .main-content.open {
+    width: 70%; /* Adjust width when side menu is open */
+  }
+  
+  .generated-image {
+    margin-top: 20px;
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .generated-image img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .feedback {
+    color: #28a745; /* Success color */
+    margin-top: 5px;
+  }
+  
+  .error {
+    color: #dc3545; /* Error color */
+    margin-top: 5px;
+  }
