@@ -16,7 +16,7 @@ comfyui_service = ComfyUIService(app.config['COMFYUI_API_URL'])
 llm_service = LLMService(app.config['LLM_CONFIG'])
 http_client = HTTPClient()
 
-logging.basicConfig(level=logging.DEBUG)
+#logging.basicConfig(level=logging.DEBUG)
 
 @app.route('/api/categories', methods=['GET'])
 def get_categories():
@@ -38,52 +38,52 @@ def generate():
     selected_model = data['model']
     selected_lora = data.get('lora', '')
 
-    app.logger.debug(f"Original prompt: {original_prompt}")
+    #app.logger.debug(f"Original prompt: {original_prompt}")
 
     # Ensure LLM service is properly configured
     if 'LLM_CONFIG' not in app.config or not app.config['LLM_CONFIG'].get('choice'):
-        app.logger.warning("LLM not configured. Using original prompt.")
-        app.logger.debug(f"LLM Config: {app.config['LLM_CONFIG']}")
+        #app.logger.warning("LLM not configured. Using original prompt.")
+        #app.logger.debug(f"LLM Config: {app.config['LLM_CONFIG']}")
         improved_prompt = original_prompt
     else:
         try:
             improved_prompt = llm_service.improve_prompt(original_prompt)
-            app.logger.debug(f"Improved prompt: {improved_prompt}")
+            #app.logger.debug(f"Improved prompt: {improved_prompt}")
         except Exception as e:
-            app.logger.error(f"Error improving prompt: {str(e)}")
+            #app.logger.error(f"Error improving prompt: {str(e)}")
             improved_prompt = original_prompt
 
     workflow = comfyui_service.create_workflow(selected_model, selected_lora, improved_prompt)
-    app.logger.debug(f"Generated workflow: {workflow}")
+    #app.logger.debug(f"Generated workflow: {workflow}")
 
     try:
         response = http_client.post(app.config['COMFYUI_API_URL'] + "/prompt", json={"prompt": workflow})
         if response is None:
-            logging.error("Failed to post workflow to ComfyUI API")
+            #logging.error("Failed to post workflow to ComfyUI API")
             return jsonify({'error': 'Failed to post workflow to ComfyUI API'}), 500
         if response.status_code == 200:
             prompt_id = response.json()['prompt_id']
-            logging.debug(f"Received prompt_id: {prompt_id}")
+            #logging.debug(f"Received prompt_id: {prompt_id}")
             
             while True:
                 try:
                     history_response = http_client.get(f"{app.config['COMFYUI_API_URL']}/history/{prompt_id}")
                     if history_response is None:
-                        logging.error(f"Failed to fetch history for prompt_id: {prompt_id}")
+                        #logging.error(f"Failed to fetch history for prompt_id: {prompt_id}")
                         return jsonify({'error': 'Failed to fetch image generation history'}), 500
                     if history_response.status_code == 200:
                         history = history_response.json()
-                        logging.debug(f"History response: {history}")
+                        #logging.debug(f"History response: {history}")
                         if prompt_id in history:
                             output_images = history[prompt_id]['outputs']
                             if output_images:
                                 image_data = output_images['13']['images'][0]
                                 image_url = f"{app.config['COMFYUI_API_URL']}/view?filename={image_data['filename']}"
-                                logging.debug(f"Image URL: {image_url}")
+                                #logging.debug(f"Image URL: {image_url}")
 
                                 image_response = http_client.get(image_url)
                                 if image_response is None:
-                                    logging.error(f"Failed to fetch image for prompt_id: {prompt_id}")
+                                    #logging.error(f"Failed to fetch image for prompt_id: {prompt_id}")
                                     return jsonify({'error': 'Failed to fetch image'}), 500
                                 if image_response.status_code == 200:
                                     # Sanitize prompts for use in headers
@@ -100,10 +100,10 @@ def generate():
                                         }
                                     )
                 except requests.exceptions.RequestException as e:
-                    logging.error(f"Request exception while fetching history: {e}")
+                    #logging.error(f"Request exception while fetching history: {e}")
                     return jsonify({'error': 'Failed to fetch image generation history'}), 500
     except requests.exceptions.ConnectionError:
-        logging.error(f"Connection error while posting workflow: {e}")
+        #logging.error(f"Connection error while posting workflow: {e}")
         return jsonify({'error': 'Unable to connect to ComfyUI API. Make sure it\'s running.'}), 503
 
     return jsonify({'error': 'Failed to generate image'}), 500
@@ -115,14 +115,17 @@ def save_setup():
         'choice': data['llmChoice'],
         'model': data.get('ollamaModel') or data.get('modelName'),
         'api_key': data.get('apiKey'),
-        'api_url': data.get('apiUrl')
+        'api_url': data.get('apiUrl', 'http://localhost:11434')  # Default to the correct URL if not provided
     }
     llm_service.update_config(app.config['LLM_CONFIG'])
+    #app.logger.debug(f"Updated LLM Config: {app.config['LLM_CONFIG']}")
     return jsonify({'message': 'Setup saved successfully'})
 
 @app.route('/api/setup', methods=['GET'])
 def get_setup():
-    return jsonify(app.config.get('LLM_CONFIG', {'choice': None}))
+    setup_config = app.config.get('LLM_CONFIG', {'choice': None})
+    #app.logger.debug(f"Retrieved LLM Config: {setup_config}")
+    return jsonify(setup_config)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

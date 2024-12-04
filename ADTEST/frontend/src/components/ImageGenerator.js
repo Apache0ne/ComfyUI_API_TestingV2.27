@@ -28,6 +28,7 @@ function ImageGenerator() {
     setSelectedCategory(category);
     setSelectedModel(model);
     setSelectedLora(lora);
+    // Do not close the side menu after selection
   };
 
   const handlePromptSubmit = async (promptText) => {
@@ -93,8 +94,8 @@ function ImageGenerator() {
 
   return (
     <div className="image-generator-container">
-      <button onClick={() => navigate(-1)}>Back</button>
-      <h2>Generate Image</h2>
+      <button className="back-button" onClick={() => navigate(-1)}>Back</button>
+      <h2 className="page-title">Generate Image</h2>
       <div className="image-generator">
         <SideMenu
           isSideMenuOpen={isSideMenuOpen}
@@ -139,7 +140,7 @@ function ImageGenerator() {
               </div>
             )}
           </div>
-          <div className="prompt-input">
+          <div className="prompt-input-container">
             <PromptInput onSubmit={handlePromptSubmit} />
             <div className="toggle-save">
               <label className="switch">

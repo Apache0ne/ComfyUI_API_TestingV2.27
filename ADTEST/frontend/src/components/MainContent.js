@@ -23,22 +23,24 @@ const MainContent = ({
 
   return (
     <div className="main-content">
-      {isLoading && <p>Generating image...</p>}
+      {isLoading && <p className="loading-message">Generating image...</p>}
       {error && <p className="error">{error}</p>}
       {feedback && <p className="feedback">{feedback}</p>}
 
       {generatedImage && (
-        <div className="generated-image">
+        <div className="generated-image-container">
+          <div className="button-container">
+            <button onClick={() => setUseShaderCanvas(!useShaderCanvas)}>
+              {useShaderCanvas ? 'Show Regular Image' : 'Show Shader Canvas'}
+            </button>
+          </div>
           {useShaderCanvas ? (
             <ShaderCanvas imageUrl={generatedImage} />
           ) : (
-            <img src={generatedImage} alt="Generated" />
+            <img src={generatedImage} alt="Generated" className="generated-image" />
           )}
         </div>
       )}
-      <button onClick={() => setUseShaderCanvas(!useShaderCanvas)}>
-        {useShaderCanvas ? 'Show Regular Image' : 'Show Shader Canvas'}
-      </button>
     </div>
   );
 };

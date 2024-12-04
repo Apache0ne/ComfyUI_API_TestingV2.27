@@ -9,7 +9,7 @@ function Setup({ onSetupComplete }) {
   const [ollamaModel, setOllamaModel] = useState('');
   const [apiKey, setApiKey] = useState('');
   const [modelName, setModelName] = useState('');
-  const [apiUrl, setApiUrl] = useState('');
+  const [apiUrl, setApiUrl] = useState('https://localhost:11434'); // Default to the correct URL
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 

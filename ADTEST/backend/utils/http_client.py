@@ -1,22 +1,29 @@
 import requests
+import logging
+
+logger = logging.getLogger(__name__)
 
 class HTTPClient:
     def get(self, url, **kwargs):
         try:
-            response = requests.get(url, **kwargs)
+            # Bypass SSL verification for development purposes
+            response = requests.get(url, verify=False, **kwargs)
             response.raise_for_status()
+            logger.debug(f"Response content: {response.text}")
             return response
         except requests.exceptions.RequestException as e:
-            print(f"HTTP GET request failed: {e}")
+            logger.error(f"HTTP GET request failed: {e}")
             return None
 
     def post(self, url, **kwargs):
         try:
-            response = requests.post(url, **kwargs)
+            # Bypass SSL verification for development purposes
+            response = requests.post(url, verify=False, **kwargs)
             response.raise_for_status()
+            logger.debug(f"Response content: {response.text}")
             return response
         except requests.exceptions.RequestException as e:
-            print(f"HTTP POST request failed: {e}")
+            logger.error(f"HTTP POST request failed: {e}")
             return None
 
     def put(self, url, **kwargs):

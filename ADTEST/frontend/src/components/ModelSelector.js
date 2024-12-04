@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { getCategories, getModelsAndLoras } from '../api/api';
+import '../styles/ModelSelector.css';
 
 function ModelSelector({ onModelSelect }) {
   const [categories, setCategories] = useState([]);
@@ -71,7 +72,7 @@ function ModelSelector({ onModelSelect }) {
     });
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div className="loading">Loading...</div>;
   if (error) return <div className="error">{error}</div>;
 
   return (
@@ -80,6 +81,7 @@ function ModelSelector({ onModelSelect }) {
         value={selectedCategory}
         onChange={handleCategoryChange}
         disabled={isLoading}
+        className="model-selector-select"
       >
         <option value="">Select a category</option>
         {categories.map((category) => (
@@ -91,6 +93,7 @@ function ModelSelector({ onModelSelect }) {
         value={selectedModel}
         onChange={handleModelChange}
         disabled={!selectedCategory || isLoading}
+        className="model-selector-select"
       >
         <option value="">Select a model</option>
         {models.map((model) => (
@@ -102,6 +105,7 @@ function ModelSelector({ onModelSelect }) {
         value={selectedLora}
         onChange={handleLoraChange}
         disabled={!selectedModel || isLoading}
+        className="model-selector-select"
       >
         <option value="">Select a LoRA (optional)</option>
         {loras.map((lora) => (

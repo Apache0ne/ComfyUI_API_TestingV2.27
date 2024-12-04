@@ -10,7 +10,8 @@ class Config:
     LLM_CONFIG = {
         'choice': 'ollama',
         'model': 'llama3.2',
-        'api_key': None
+        'api_key': None,
+        'api_url': 'http://localhost:11434'  # Ensure this is set correctly
     }
 
     @staticmethod

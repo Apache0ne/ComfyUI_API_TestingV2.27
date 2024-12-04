@@ -1,37 +1,35 @@
 .prompt-input {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .prompt-input textarea {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 16px;
-    box-sizing: border-box;
-    resize: vertical;
-    font-size: 16px; /* Increased font size for better readability */
-    height: 100px; /* Increased height for larger text area */
-  }
-  
-  .prompt-input button {
-    background-color: #007bff;
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .prompt-input button:hover {
-    background-color: #0056b3;
-  }
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.prompt-input textarea {
+  padding: var(--input-padding);
+  margin: var(--input-margin-bottom);
+  border-radius: var(--border-radius);
+  box-sizing: border-box;
+  resize: vertical;
+  font-size: 16px;
+  height: 100px;
+  background-color: var(--input-background-color);
+  color: var(--text-color);
+  border: 1px solid var(--input-border-color);
+}
+
+.prompt-input button {
+  padding: var(--button-padding);
+  margin: 4px 2px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  background-color: var(--primary-color);
+  border: none;
+  color: white;
+  border-radius: var(--button-border-radius);
+  cursor: pointer;
+}
+
+.prompt-input button:hover {
+  background-color: var(--secondary-color);
+}
