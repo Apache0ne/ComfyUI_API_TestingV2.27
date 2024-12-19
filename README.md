@@ -1,5 +1,5 @@
 # ComfyUI Image Generator with LLM Integration
-## alll Future work on this project is private 
+## all Future work on this project is private 
 This project combines ComfyUI for image generation with various Language Model (LLM) providers, offering a web-based interface for creating and manipulating images.
 
 ## Features
